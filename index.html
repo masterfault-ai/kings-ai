@@ -3,22 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot</title>
+    <title>Font Generator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
-        <div class="header">
-            <h1>AI Chatbot</h1>
+
+    <div class="container">
+        <h1>Font Generator</h1>
+        
+        <div class="input-section">
+            <label for="textInput">Enter your text:</label>
+            <input type="text" id="textInput" placeholder="Type something here..." />
         </div>
-        <div class="chat-box" id="chatBox">
-            <div class="message">
-                <p><strong>AI:</strong> Hello! How can I assist you today?</p>
-            </div>
+
+        <div class="controls">
+            <label for="fontSelector">Choose a font:</label>
+            <select id="fontSelector">
+                <option value="Arial">Arial</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Comic Sans MS">Comic Sans MS</option>
+            </select>
+
+            <label for="fontSizeRange">Font size:</label>
+            <input type="range" id="fontSizeRange" min="10" max="100" value="20">
+            <span id="fontSizeLabel">20px</span>
         </div>
-        <div class="input-container">
-            <input type="text" id="userInput" placeholder="Type your message..." />
-            <button onclick="sendMessage()">Send</button>
+
+        <div class="output">
+            <h2>Preview:</h2>
+            <p id="previewText">Your text will appear here</p>
         </div>
     </div>
 
