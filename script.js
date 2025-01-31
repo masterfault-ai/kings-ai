@@ -9,10 +9,14 @@ function sendMessage() {
         userMessage.innerHTML = `<p><strong>You:</strong> ${userInput}</p>`;
         chatBox.appendChild(userMessage);
         
-        // AI's response (this is a simple placeholder, can be expanded with actual AI functionality)
+        // Simulate AI response based on user input
         let aiMessage = document.createElement("div");
         aiMessage.classList.add("message");
-        aiMessage.innerHTML = `<p><strong>AI:</strong> I'm working on a response!</p>`;
+
+        // Predefined responses
+        let response = getAIResponse(userInput);
+
+        aiMessage.innerHTML = `<p><strong>AI:</strong> ${response}</p>`;
         chatBox.appendChild(aiMessage);
         
         // Scroll to the bottom
@@ -20,5 +24,18 @@ function sendMessage() {
         
         // Clear the input field
         document.getElementById("userInput").value = "";
+    }
+}
+
+function getAIResponse(input) {
+    // Here you can simulate different responses based on input
+    if (input.toLowerCase().includes("hello")) {
+        return "Hello! How can I help you today?";
+    } else if (input.toLowerCase().includes("how are you")) {
+        return "I'm doing great, thank you for asking!";
+    } else if (input.toLowerCase().includes("bye")) {
+        return "Goodbye! Have a great day!";
+    } else {
+        return "I'm not sure how to respond to that.";
     }
 }
