@@ -1,41 +1,36 @@
-function sendMessage() {
-    let userInput = document.getElementById("userInput").value;
-    if (userInput.trim() !== "") {
-        let chatBox = document.getElementById("chatBox");
-        
-        // User's message
-        let userMessage = document.createElement("div");
-        userMessage.classList.add("message");
-        userMessage.innerHTML = `<p><strong>You:</strong> ${userInput}</p>`;
-        chatBox.appendChild(userMessage);
-        
-        // Simulate AI response based on user input
-        let aiMessage = document.createElement("div");
-        aiMessage.classList.add("message");
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+require('dotenv').config();
 
-        // Predefined responses
-        let response = getAIResponse(userInput);
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-        aiMessage.innerHTML = `<p><strong>AI:</strong> ${response}</p>`;
-        chatBox.appendChild(aiMessage);
-        
-        // Scroll to the bottom
-        chatBox.scrollTop = chatBox.scrollHeight;
-        
-        // Clear the input field
-        document.getElementById("userInput").value = "";
+app.use(bodyParser.json());
+
+app.post('/getAIResponse', async (req, res) => {
+    const userInput = req.body.userInput;
+    
+    try {
+        const response = await axios.post('https://api.openai.com/v1/completions', {
+            model: 'text-davinci-003',
+            prompt: userInput,
+            max_tokens: 150,
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const aiResponse = response.data.choices[0].text.trim();
+        res.json({ response: aiResponse });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ response: "Sorry, there was an error processing your request." });
     }
-}
+});
 
-function getAIResponse(input) {
-    // Here you can simulate different responses based on input
-    if (input.toLowerCase().includes("hello")) {
-        return "Hello! How can I help you today?";
-    } else if (input.toLowerCase().includes("how are you")) {
-        return "I'm doing great, thank you for asking!";
-    } else if (input.toLowerCase().includes("bye")) {
-        return "Goodbye! Have a great day!";
-    } else {
-        return "I'm not sure how to respond to that.";
-    }
-}
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
