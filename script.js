@@ -1,36 +1,27 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-require('dotenv').config();
+// Get references to the HTML elements
+const textInput = document.getElementById("textInput");
+const fontSelector = document.getElementById("fontSelector");
+const fontSizeRange = document.getElementById("fontSizeRange");
+const fontSizeLabel = document.getElementById("fontSizeLabel");
+const previewText = document.getElementById("previewText");
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-app.use(bodyParser.json());
-
-app.post('/getAIResponse', async (req, res) => {
-    const userInput = req.body.userInput;
+// Function to update the preview text style
+function updatePreview() {
+    const font = fontSelector.value;
+    const fontSize = fontSizeRange.value;
     
-    try {
-        const response = await axios.post('https://api.openai.com/v1/completions', {
-            model: 'text-davinci-003',
-            prompt: userInput,
-            max_tokens: 150,
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        });
+    previewText.style.fontFamily = font;
+    previewText.style.fontSize = fontSize + "px";
+    fontSizeLabel.textContent = fontSize + "px";
+    
+    // Update the preview text content with what the user types
+    previewText.textContent = textInput.value ? textInput.value : "Your text will appear here";
+}
 
-        const aiResponse = response.data.choices[0].text.trim();
-        res.json({ response: aiResponse });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ response: "Sorry, there was an error processing your request." });
-    }
-});
+// Event listeners to update the preview when the user changes input
+textInput.addEventListener("input", updatePreview);
+fontSelector.addEventListener("change", updatePreview);
+fontSizeRange.addEventListener("input", updatePreview);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// Initial update on page load
+updatePreview();
